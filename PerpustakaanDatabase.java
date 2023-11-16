@@ -3,7 +3,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-// import java.sql.Statement;
 
 public class PerpustakaanDatabase {
     private Connection connection;
@@ -63,24 +62,30 @@ public class PerpustakaanDatabase {
     }
 
     public void cariBuku(String judul_buku) {
-        String sql = "SELECT * FROM data_buku WHERE judul_buku = ?";
+        String sql = "SELECT * FROM data_buku WHERE judul_buku LIKE ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, judul_buku);
+            statement.setString(1, "%" + judul_buku + "%");
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    int isbn = resultSet.getInt("isbn");
-                    String judul = resultSet.getString("judul_buku");
-                    String pengarang = resultSet.getString("pengarang");
-                    int tahunTerbit = resultSet.getInt("tahun_terbit");
-
-                    // Menampilkan informasi buku yang ditemukan
                     System.out.println("Buku ditemukan:");
-                    System.out.println("isbn: " + isbn);
-                    System.out.println("Judul: " + judul);
-                    System.out.println("Pengarang: " + pengarang);
-                    System.out.println("Tahun Terbit: " + tahunTerbit);
+                    System.out.println("---------------------------------------------------------------------------");
+                    System.out.println("|   ISBN    |\tTahun Terbit |\tPengarang                     |\tJudul Buku ");
+                    System.out.println("---------------------------------------------------------------------------");
+                    do {
+                        int isbn = resultSet.getInt("isbn");
+                        String judul = resultSet.getString("judul_buku");
+                        String pengarang = resultSet.getString("pengarang");
+                        int tahunTerbit = resultSet.getInt("tahun_terbit");
+
+                        // Menampilkan informasi buku yang ditemukan
+                        System.out.printf("| %4d ", isbn);
+                        System.out.printf("|\t%8d     ", tahunTerbit);
+                        System.out.printf("| %-30s ", pengarang);
+                        System.out.printf("| %10s ", judul);
+                        System.out.print("\n");
+                    } while (resultSet.next());
                 } else {
                     System.out.println("Buku tidak ditemukan.");
                 }
@@ -103,14 +108,12 @@ public class PerpustakaanDatabase {
                 String pengarang = resultSet.getString("pengarang");
                 int tahun_terbit = resultSet.getInt("tahun_terbit");
 
-                // System.out.println("ISBN: " + isbn);
-                // System.out.println("Judul: " + judul_buku);
-                // System.out.println("Pengarang: " + pengarang);
-                // System.out.println("Tahun Terbit: " + tahun_terbit);
-                // System.out.println("---------------");
-                // System.out.println("|\tISBN\t|\t\tJudul\t\t|\tPengarang\t|Tahun Terbit| ");
-                System.out.println(
-                        " " + isbn + "\t" + "\t\t" + judul_buku + "\t\t" + "\t" + pengarang + "\t" + tahun_terbit);
+                System.out.printf("| %4d ", isbn);
+                System.out.printf("|\t%8d     ", tahun_terbit);
+                System.out.printf("| %-30s ", pengarang);
+                System.out.printf("| %10s ", judul_buku);
+                System.out.print("\n");
+
             }
 
         } catch (SQLException e) {
@@ -131,11 +134,10 @@ public class PerpustakaanDatabase {
             statement.setString(6, peminjaman.getTanggal_peminjaman());
             statement.setString(7, peminjaman.getTanggal_pengembalian());
             statement.setString(8, peminjaman.getStatus_peminjaman());
-        
+
             int rowsAffected = statement.executeUpdate();
-        
+
             if (rowsAffected == 1) {
-                // Gunakan fungsi LAST_INSERT_ROWID() untuk mendapatkan ID Peminjaman yang baru
                 String selectLastId = "SELECT LAST_INSERT_ROWID() AS last_id";
                 try (PreparedStatement selectStatement = connection.prepareStatement(selectLastId)) {
                     ResultSet resultSet = selectStatement.executeQuery();
@@ -151,7 +153,6 @@ public class PerpustakaanDatabase {
             e.printStackTrace();
             System.out.println("Gagal menambahkan peminjaman buku ke database.");
         }
-        
 
     }
 
@@ -180,43 +181,6 @@ public class PerpustakaanDatabase {
         }
     }
 
-    // public void peminjamanBuku(Peminjaman peminjaman) {
-
-    // String sql = "INSERT INTO peminjaman (id_anggota, nama_anggota, isbn,
-    // judul_buku, alamat_peminjam, tanggal_peminjaman, tanggal_pengembalian,
-    // status_peminjaman) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    // try (PreparedStatement statement = connection.prepareStatement(sql)) {
-    // // statement.setInt(1, peminjaman.getIdPeminjaman());
-    // statement.setInt(1, peminjaman.getId_anggota());
-    // statement.setString(2, peminjaman.getNama_anggota());
-    // statement.setString(3, peminjaman.getAlamat_peminjam());
-    // statement.setInt(4, peminjaman.getIsbn());
-    // statement.setString(5, peminjaman.getJudul_buku());
-    // statement.setString(6, peminjaman.getTanggal_peminjaman());
-    // statement.setString(7, peminjaman.getTanggal_pengembalian());
-    // statement.setString(8, peminjaman.getStatus_peminjaman());
-
-    // statement.executeUpdate();
-    // System.out.println("Peminjaman buku berhasil ditambahkan ke database.");
-    // System.out.println("Peminjaman berhasil ditambahkan:");
-    // System.out.println("ID Anggota : " + peminjaman.getId_anggota());
-    // System.out.println("Nama Anggota : " + peminjaman.getNama_anggota());
-    // System.out.println("Alamat Peminjam : " + peminjaman.getAlamat_peminjam());
-    // System.out.println("ISBN Buku : " + peminjaman.getIsbn());
-    // System.out.println("Judul Buku : " + peminjaman.getJudul_buku());
-    // System.out.println("Tanggal Peminjaman : " +
-    // peminjaman.getTanggal_peminjaman());
-    // System.out.println("Tanggal Pengembalian : " +
-    // peminjaman.getTanggal_pengembalian());
-    // System.out.println("Status Peminjaman : " +
-    // peminjaman.getStatus_peminjaman());
-    // } catch (SQLException e) {
-    // e.printStackTrace();
-    // System.out.println("Gagal menambahkan peminjaman buku ke database.");
-    // }
-    // }
-
-    // Metode lainnya sesuai kebutuhan
 
     public void closeConnection() {
         try {

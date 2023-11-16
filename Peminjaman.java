@@ -11,7 +11,6 @@ public class Peminjaman {
 
     public Peminjaman(int id_anggota, String nama_anggota, String alamat_peminjam, int isbn_buku, String judulBuku,
             String tanggal_peminjaman, String tanggal_pengembalian, String status_peminjaman) {
-        // this.id_peminjaman = id_peminjaman;
         this.id_anggota = id_anggota;
         this.nama_anggota = nama_anggota;
         this.alamat_peminjam = alamat_peminjam;
