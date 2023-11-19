@@ -10,18 +10,22 @@ public class Main {
             System.out.println("Menu :");
             System.out.println("1. Tambah Buku");
             System.out.println("2. Hapus Buku");
-            System.out.println("3. Cari Buku");
+            System.out.println("3. Edit Buku");
             System.out.println("4. Tampilkan Daftar Buku");
-            System.out.println("5. Peminjaman Buku");
-            System.out.println("6. Keluar");
+            System.out.println("5. Cari Buku");
+            System.out.println("6. Peminjaman Buku");
+            System.out.println("7. Tampilkan daftar peminjam");
+            System.out.println("8. Ubah Status Peminjaman");
+            System.out.println("9. Keluar");
+            System.out.println("10. Cetak Struk");
 
-            System.out.print("Pilihan Anda (1-6): ");
+            System.out.print("Pilihan Anda (1-10): ");
             int menuChoice = scanner.nextInt();
             scanner.nextLine();
 
             switch (menuChoice) {
                 case 1:
-                    // Tambah Buku
+                    // *Tambah Buku
                     boolean tambahDataLagi = true;
                     while (tambahDataLagi) {
                         System.out.print("Masukkan jumlah buku yang ingin di input: ");
@@ -44,39 +48,35 @@ public class Main {
 
                             perpustakaanDB.tambahBuku(bukuBaru);
                         }
-                        System.out.print("Tambah data lagi? (ya/tidak) : ");
+                        System.out.print("Tambah data lagi? (y/n) : ");
                         String lanjutkanTambahBuku = scanner.nextLine().toLowerCase();
-                        tambahDataLagi = lanjutkanTambahBuku.equals("ya") ? true : false;
+                        tambahDataLagi = lanjutkanTambahBuku.equals("y") ? true : false;
                     }
                     break;
                 case 2:
-                    // Hapus Buku
+                    // *Hapus Buku
                     boolean hapusLagi = true;
                     while (hapusLagi) {
                         System.out.print("Masukkan Nama atau ISBN Buku yang Akan Dihapus : ");
                         String namaAtauISBN = scanner.nextLine();
                         perpustakaanDB.hapusBuku(namaAtauISBN);
-                        System.out.print("Hapus Buku lagi ? (ya/tidak) :");
+                        System.out.print("Hapus Buku lagi ? (y/n) :");
                         String hapusBukuLagi = scanner.nextLine().toLowerCase();
-                        hapusLagi = hapusBukuLagi.equals("ya");
+                        hapusLagi = hapusBukuLagi.equals("y");
                     }
                     break;
                 case 3:
-                    // Cari Buku
-                    boolean cariLagi = true;
-                    while (cariLagi) {
-                        System.out.print("Masukan judul buku yang ingin dicari : \n");
-                        String judul_buku = scanner.nextLine();
-                        perpustakaanDB.cariBuku(judul_buku);
-                        System.out.println(
-                                "-----------------------------------------------------------------------------------------------");
-                        System.out.print("Cari Buku lagi ? (ya/tidak) :");
-                        String cariBukuLagi = scanner.nextLine().toLowerCase();
-                        cariLagi = cariBukuLagi.equals("ya");
-                    }
+                    // * Edit BUKU
+                    perpustakaanDB.editBuku();
                     break;
                 case 4:
-                    // Tampilkan Semua Daftar Buku
+                    // * Tampilkan Semua Daftar Buku
+                    System.out.println(
+                            "===============================================================================================");
+                    System.out.println(
+                            "                                    DAFTAR SEMUA BUKU                                     ");
+                    System.out.println(
+                            "===============================================================================================");
                     System.out.println(
                             "-----------------------------------------------------------------------------------------------");
                     System.out.println("|   ISBN    |\tTahun Terbit |\tPengarang                     |\tJudul Buku ");
@@ -85,51 +85,117 @@ public class Main {
                     perpustakaanDB.tampilkanDaftarBuku();
                     System.out.println(
                             "-----------------------------------------------------------------------------------------------");
-                    System.out.print("Apakah Anda ingin melanjutkan ke menu utama? (ya/tidak): ");
+                    System.out.print("Apakah Anda ingin melanjutkan ke menu utama? (y/n): ");
                     String lanjutkan = scanner.nextLine().toLowerCase();
 
-                    exit = !lanjutkan.equals("ya") ? true : false;
+                    exit = !lanjutkan.equals("y") ? true : false;
                     break;
                 case 5:
-                    // Pinjam Buku
-                    boolean pinjamLagi = true;
-                    while (pinjamLagi) {
-                        System.out.print("Masukkan Id Anggota           : ");
-                        int id_anggota = scanner.nextInt();
-                        scanner.nextLine();
-                        System.out.print("Masukkan Nama Anggota         : ");
-                        String nama_anggota = scanner.nextLine();
-                        System.out.print("Masukkan Alamat Peminjam      : ");
-                        String alamat_peminjam = scanner.nextLine();
-                        System.out.print("Masukkan ISBN                 : ");
-                        int isbn_buku = scanner.nextInt();
-                        scanner.nextLine();
-                        System.out.print("Masukkan Judul Buku           : ");
-                        String judulBuku = scanner.nextLine();
-                        System.out.print("Masukkan Tanggal Peminjaman   : ");
-                        String tanggal_peminjaman = scanner.nextLine();
-                        System.out.print("Masukkan Tanggal Pengembalian : ");
-                        String tanggal_pengembalian = scanner.nextLine();
-                        System.out.print("Masukkan Status Peminjaman    : ");
-                        String status_peminjaman = scanner.nextLine();
-
-                        Peminjaman peminjamanBuku = new Peminjaman(id_anggota, nama_anggota, alamat_peminjam, isbn_buku,
-                                judulBuku, tanggal_peminjaman, tanggal_pengembalian, status_peminjaman);
-                        perpustakaanDB.peminjamanBuku(peminjamanBuku);
+                    // * Cari Buku
+                    boolean cariLagi = true;
+                    while (cariLagi) {
+                        System.out.print("\nMasukan judul buku yang ingin dicari : \n");
+                        String judul_buku = scanner.nextLine();
+                        System.out.println(
+                                "===============================================================================================");
+                        perpustakaanDB.cariBuku(judul_buku);
+                        System.out.println(
+                                "-----------------------------------------------------------------------------------------------");
+                        System.out.print("Cari Buku lagi ? (y/n) :");
+                        String cariBukuLagi = scanner.nextLine().toLowerCase();
+                        cariLagi = cariBukuLagi.equals("y");
                     }
-                    System.out.print("Apakah Anda ingin melanjutkan ke menu utama? (ya/tidak): ");
-                    String tambahPinjaman = scanner.nextLine().toLowerCase();
-
-                    pinjamLagi = tambahPinjaman.equals("ya") ? true : false;
-
                     break;
                 case 6:
-                    // Keluar dari aplikasi
+                    // * Peminjaman Buku
+                    boolean pinjamLagi = true;
+                    while (pinjamLagi) {
+                        System.out.print("Masukkan jumlah peminjam yang ingin di input : ");
+                        int jumlahPeminjam = scanner.nextInt();
+                        scanner.nextLine();
+                        for (int i = 0; i < jumlahPeminjam; i++) {
+
+                            System.out.print("Masukkan Id Anggota           : ");
+                            int id_anggota = scanner.nextInt();
+                            scanner.nextLine();
+                            System.out.print("Masukkan Nama Anggota         : ");
+                            String nama_anggota = scanner.nextLine();
+                            System.out.print("Masukkan Alamat Peminjam      : ");
+                            String alamat_peminjam = scanner.nextLine();
+                            System.out.print("Masukkan ISBN                 : ");
+                            int isbn_buku = scanner.nextInt();
+                            scanner.nextLine();
+                            System.out.print("Masukkan Judul Buku           : ");
+                            String judulBuku = scanner.nextLine();
+                            System.out.print("Masukkan Tanggal Peminjaman   : ");
+                            String tanggal_peminjaman = scanner.nextLine();
+                            System.out.print("Masukkan Tanggal Pengembalian : ");
+                            String tanggal_pengembalian = scanner.nextLine();
+                            System.out.print("Masukkan Status Peminjaman    : ");
+                            String status_peminjaman = scanner.nextLine();
+
+                            Peminjaman peminjamanBuku = new Peminjaman(id_anggota, nama_anggota, alamat_peminjam,
+                                    isbn_buku,
+                                    judulBuku, tanggal_peminjaman, tanggal_pengembalian, status_peminjaman);
+                            perpustakaanDB.peminjamanBuku(peminjamanBuku);
+                        }
+                        System.out.print("Apakah Anda ingin menambah pinjaman (y/n): ");
+                        String tambahPinjaman = scanner.nextLine().toLowerCase();
+
+                        pinjamLagi = tambahPinjaman.equals("y") ? true : false;
+                    }
+                    break;
+                case 7:
+                    // * Tampilkan Semua Daftar Peminjam
+                    System.out.println(
+                            "===================================================================================");
+                    System.out.println("                        DAFTAR PEMINJAM BUKU");
+                    System.out.println(
+                            "===================================================================================");
+                    System.out.println(
+                            "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                    System.out.println(
+                            "| Id Peminjaman | Id Anggota | Nama Anggota   | ISBN      | Judul Buku                    | Tgl Peminjaman | Tgl Pengembalian | Status        | Alamat Peminjam          ");
+                    System.out.println(
+                            "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                    perpustakaanDB.tampilkanSemuaPeminjam();
+                    System.out.println("");
+                    System.out.print("Apakah Anda ingin melanjutkan ke menu utama? (y/n): ");
+                    lanjutkan = scanner.nextLine().toLowerCase();
+
+                    exit = !lanjutkan.equals("y") ? true : false;
+                    break;
+                case 8:
+                    // * Ubah Status Pinjaman
+                    System.out.print("Masukkan Nomor Pinjaman : ");
+                    int id_peminjaman = scanner.nextInt();
+                    System.out.print("Ubah Status Pinjaman    : ");
+                    String status_pinjaman = scanner.next();
+                    Peminjaman editPinjam = new Peminjaman(id_peminjaman, status_pinjaman);
+                    perpustakaanDB.editPeminjaman(editPinjam);
+                    break;
+                case 9:
+                    // * CETAK STRUK
+                    boolean cetakLagi = true;
+
+                    while (cetakLagi) {
+                        System.out.println("Masukan nomor Pinjaman untuk mencetak Struk");
+                        System.out.print("Masukan nomor Pinjaman :");
+                        int idPeminjaman = scanner.nextInt();
+                        perpustakaanDB.tampilkanPeminjaman(idPeminjaman);
+                        System.out.print("Ingin mencetak lagi ? (y/n) :");
+                        String jawab = scanner.next();
+                        cetakLagi = jawab.equals("y") ? true : false;
+                    }
+
+                    break;
+                case 10:
+                    // !Keluar dari aplikasi
                     System.out.println("Keluar dari aplikasi.");
                     exit = true;
                     break;
                 default:
-                    // inputan salah
+                    // !inputan salah
                     System.out.println("Pilihan tidak valid. Coba lagi.");
                     break;
             }

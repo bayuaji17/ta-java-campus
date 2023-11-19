@@ -21,9 +21,19 @@ public class Peminjaman {
         this.status_peminjaman = status_peminjaman;
     }
 
-    public int getIdPeminjaman() {
-    return id_peminjaman;
+    public Peminjaman(int id_peminjaman, String status_peminjaman) {
+        this.id_peminjaman = id_peminjaman;
+        this.status_peminjaman = status_peminjaman;
     }
+
+    public Peminjaman(int id_peminjaman) {
+        this.id_peminjaman = id_peminjaman;
+        // this.status_peminjaman = status_peminjaman;
+    }
+    public int getIdPeminjaman() {
+        return id_peminjaman;
+    }
+
     public int getId_anggota() {
         return id_anggota;
     }
