@@ -1,3 +1,4 @@
+//TODO REVIEW Class Peminjaman (1)
 public class Peminjaman {
     private int id_peminjaman;
     private int id_anggota;
@@ -28,7 +29,6 @@ public class Peminjaman {
 
     public Peminjaman(int id_peminjaman) {
         this.id_peminjaman = id_peminjaman;
-        // this.status_peminjaman = status_peminjaman;
     }
     public int getIdPeminjaman() {
         return id_peminjaman;

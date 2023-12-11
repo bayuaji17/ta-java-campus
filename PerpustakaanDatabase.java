@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class PerpustakaanDatabase {
+    // TODO REVIEW KONEKSI(2)
     private Connection connection;
 
     public PerpustakaanDatabase(String dbName) {
@@ -16,6 +17,7 @@ public class PerpustakaanDatabase {
         }
     }
 
+    // TODO REVIEW TAMBAH BUKU (2)
     // * METHOD UNTUK TAMBAH BUKU */
     public void tambahBuku(Buku buku) {
         String sql = "INSERT INTO data_buku (isbn, judul_buku, pengarang, tahun_terbit) VALUES (?, ?, ?, ?)";
@@ -34,6 +36,7 @@ public class PerpustakaanDatabase {
         }
     }
 
+    // TODO REVIEW HAPUS BUKU (3)
     // * METHOD UNTUK HAPUS BUKU */
     public void hapusBuku(String namaAtauISBN) {
         String sql = "DELETE FROM data_buku WHERE judul_buku = ? OR isbn = ?";
@@ -45,7 +48,7 @@ public class PerpustakaanDatabase {
                 statement.setNull(1, java.sql.Types.VARCHAR);
                 statement.setInt(2, isbn);
             } catch (NumberFormatException e) {
-    
+
                 statement.setString(1, namaAtauISBN);
                 statement.setNull(2, java.sql.Types.INTEGER);
             }
@@ -63,6 +66,7 @@ public class PerpustakaanDatabase {
         }
     }
 
+    // TODO REVIEW EDIT BUKU(3)
     // * METHOD UNTUK EDIT BUKU */
     public void editBuku() {
         Scanner scanner = new Scanner(System.in);
@@ -72,10 +76,9 @@ public class PerpustakaanDatabase {
         System.out.println("3. Pengarang");
         System.out.println("4. Tahun Terbit");
 
-        System.out.print("Masukkan nomor atribut: ");
+        System.out.print("Masukkan nomor atribut (1-4) : ");
         int choice = scanner.nextInt();
         scanner.nextLine();
-
 
         String columnName = "";
         switch (choice) {
@@ -96,14 +99,13 @@ public class PerpustakaanDatabase {
                 break;
         }
 
-
-        System.out.print("Masukkan nilai " + columnName + " Baru : ");
+        System.out.print("Masukkan nilai " + columnName.toUpperCase() + " Baru : ");
         String newValue = scanner.nextLine();
 
         System.out.print("Masukkan ISBN buku yang akan diubah: ");
         int isbn = scanner.nextInt();
-        scanner.nextLine(); 
-        
+        scanner.nextLine();
+
         String sql = "UPDATE data_buku SET " + columnName + " = ? WHERE isbn = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, newValue);
@@ -123,6 +125,35 @@ public class PerpustakaanDatabase {
 
     }
 
+    // TODO REVIEW TAMPILKAN BUKU(4)
+    // * METHOD UNTUK MENAMPILKAN DAFTAR BUKU
+    public void tampilkanDaftarBuku() {
+        String sql = "SELECT * FROM data_buku";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int isbn = resultSet.getInt("isbn");
+                String judul_buku = resultSet.getString("judul_buku");
+                String pengarang = resultSet.getString("pengarang");
+                int tahun_terbit = resultSet.getInt("tahun_terbit");
+
+                System.out.printf("| %4d ", isbn);
+                System.out.printf("|\t%8d     ", tahun_terbit);
+                System.out.printf("| %-30s ", pengarang);
+                System.out.printf("| %10s ", judul_buku);
+                System.out.print("\n");
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Gagal menampilkan daftar buku.");
+        }
+    }
+
+    // TODO REVIEW CARI BUKU(4)
     // * METHOD UNTUK CARI BUKU */
     public void cariBuku(String judul_buku) {
         String sql = "SELECT * FROM data_buku WHERE judul_buku LIKE ?";
@@ -133,9 +164,11 @@ public class PerpustakaanDatabase {
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     System.out.println("Buku ditemukan ! berikut adalah daftarnya...");
-                    System.out.println("-----------------------------------------------------------------------------------------------");
+                    System.out.println(
+                            "-----------------------------------------------------------------------------------------------");
                     System.out.println("|   ISBN    |\tTahun Terbit |\tPengarang                     |\tJudul Buku ");
-                    System.out.println("-----------------------------------------------------------------------------------------------");
+                    System.out.println(
+                            "-----------------------------------------------------------------------------------------------");
                     do {
                         int isbn = resultSet.getInt("isbn");
                         String judul = resultSet.getString("judul_buku");
@@ -158,6 +191,43 @@ public class PerpustakaanDatabase {
         }
     }
 
+    // TODO REVIEW TAMBAH PEMINJAMAN(4)
+    // * METHOD UNTUK PEMINJAMAN BUKU
+    public void peminjamanBuku(Peminjaman peminjaman) {
+
+        String sql = "INSERT INTO peminjaman (id_anggota, nama_anggota, isbn, judul_buku, alamat_peminjam, tanggal_peminjaman, tanggal_pengembalian, status_peminjaman) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, peminjaman.getId_anggota());
+            statement.setString(2, peminjaman.getNama_anggota());
+            statement.setInt(3, peminjaman.getIsbn());
+            statement.setString(4, peminjaman.getJudul_buku());
+            statement.setString(5, peminjaman.getAlamat_peminjam());
+            statement.setString(6, peminjaman.getTanggal_peminjaman());
+            statement.setString(7, peminjaman.getTanggal_pengembalian());
+            statement.setString(8, peminjaman.getStatus_peminjaman());
+
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected == 1) {
+                String selectLastId = "SELECT LAST_INSERT_ROWID() AS last_id";
+                try (PreparedStatement selectStatement = connection.prepareStatement(selectLastId)) {
+                    ResultSet resultSet = selectStatement.executeQuery();
+                    if (resultSet.next()) {
+                        int idPeminjamanBaru = resultSet.getInt("last_id");
+                        System.out.println("Peminjaman berhasil ditambahkan !");
+                        tampilkanPeminjaman(idPeminjamanBaru);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Gagal menambahkan peminjaman buku ke database.");
+        }
+
+    }
+
+    // TODO REVIEW TAMPILKAN SEMUA DAFTAR PEMINJAMAN(5)
+    // * METHOD UNTUK MENAMPILKAN SEMUA PEMINJAM
     public void tampilkanSemuaPeminjam() {
         String sql = "SELECT * FROM peminjaman";
         try (PreparedStatement selecStatement = connection.prepareStatement(sql);
@@ -192,65 +262,8 @@ public class PerpustakaanDatabase {
         }
     }
 
-    public void tampilkanDaftarBuku() {
-        String sql = "SELECT * FROM data_buku";
-
-        try (PreparedStatement statement = connection.prepareStatement(sql);
-                ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                int isbn = resultSet.getInt("isbn");
-                String judul_buku = resultSet.getString("judul_buku");
-                String pengarang = resultSet.getString("pengarang");
-                int tahun_terbit = resultSet.getInt("tahun_terbit");
-
-                System.out.printf("| %4d ", isbn);
-                System.out.printf("|\t%8d     ", tahun_terbit);
-                System.out.printf("| %-30s ", pengarang);
-                System.out.printf("| %10s ", judul_buku);
-                System.out.print("\n");
-
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Gagal menampilkan daftar buku.");
-        }
-    }
-
-    public void peminjamanBuku(Peminjaman peminjaman) {
-
-        String sql = "INSERT INTO peminjaman (id_anggota, nama_anggota, isbn, judul_buku, alamat_peminjam, tanggal_peminjaman, tanggal_pengembalian, status_peminjaman) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, peminjaman.getId_anggota());
-            statement.setString(2, peminjaman.getNama_anggota());
-            statement.setInt(3, peminjaman.getIsbn());
-            statement.setString(4, peminjaman.getJudul_buku());
-            statement.setString(5, peminjaman.getAlamat_peminjam());
-            statement.setString(6, peminjaman.getTanggal_peminjaman());
-            statement.setString(7, peminjaman.getTanggal_pengembalian());
-            statement.setString(8, peminjaman.getStatus_peminjaman());
-
-            int rowsAffected = statement.executeUpdate();
-
-            if (rowsAffected == 1) {
-                String selectLastId = "SELECT LAST_INSERT_ROWID() AS last_id";
-                try (PreparedStatement selectStatement = connection.prepareStatement(selectLastId)) {
-                    ResultSet resultSet = selectStatement.executeQuery();
-                    if (resultSet.next()) {
-                        int idPeminjamanBaru = resultSet.getInt("last_id");
-                        System.out.println("Peminjaman berhasil ditambahkan !");
-                        tampilkanPeminjaman(idPeminjamanBaru);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Gagal menambahkan peminjaman buku ke database.");
-        }
-
-    }
-
+    // TODO REVIEW UBAH STATUS PEMINJAMAN (5)
+    // * METHOD UNTUK UBAH STATUS PEMINJAMAN
     public void editPeminjaman(Peminjaman peminjaman) {
         String sqlEdit = "UPDATE peminjaman SET status_peminjaman = ? WHERE id_peminjaman = ?";
         try (PreparedStatement statement = connection.prepareStatement(sqlEdit)) {
@@ -269,6 +282,8 @@ public class PerpustakaanDatabase {
         }
     }
 
+    // TODO REVIEW CETAK STRUK (5)
+    // * METHOD TAMPILKAN STRUK
     public void tampilkanPeminjaman(int id_peminjaman) {
         String selectSql = "SELECT id_peminjaman, id_anggota, nama_anggota, isbn, judul_buku, alamat_peminjam, tanggal_peminjaman, tanggal_pengembalian, status_peminjaman FROM peminjaman WHERE id_peminjaman = ?";
 
@@ -304,6 +319,7 @@ public class PerpustakaanDatabase {
         }
     }
 
+    // TODO REVIEW KONEKSI (2)
     public void closeConnection() {
         try {
             if (connection != null) {

@@ -1,11 +1,22 @@
 import java.util.Scanner;
+//TODO REVIEW CODINGAN
+//TODO - Review Class Buku.java dan Class Peminjaman.java  (1)
+//TODO - Review database dan 2 table, method koneksi database, Method tambah (2)
+//TODO - Review Method hapus buku, edit buku (3)
+//TODO - Review Method tampilkan daftar buku, cari buku,tambah peminjaman (4)
+//TODO - Review Method tampilkan daftar peminjaman,ubah status peminjaman,cetak Struk (5)
+//TODO - Review Class Main.java dan OUTPUT PROGRAM ! (6)
 
+// * Driver menggunakan versi sqlite-jdbc-3.42.0.0.jar
+// * Database menggunakan sqlite3
+
+//TODO REVIEW (6)
 public class Main {
     public static void main(String[] args) {
         PerpustakaanDatabase perpustakaanDB = new PerpustakaanDatabase("perpustakaan.db");
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
-
+        String lanjutkan = "";
         while (!exit) {
             System.out.println("Menu :");
             System.out.println("1. Tambah Buku");
@@ -16,8 +27,8 @@ public class Main {
             System.out.println("6. Peminjaman Buku");
             System.out.println("7. Tampilkan daftar peminjam");
             System.out.println("8. Ubah Status Peminjaman");
-            System.out.println("9. Keluar");
-            System.out.println("10. Cetak Struk");
+            System.out.println("9. Cetak Struk");
+            System.out.println("10. Keluar");
 
             System.out.print("Pilihan Anda (1-10): ");
             int menuChoice = scanner.nextInt();
@@ -49,8 +60,8 @@ public class Main {
                             perpustakaanDB.tambahBuku(bukuBaru);
                         }
                         System.out.print("Tambah data lagi? (y/n) : ");
-                        String lanjutkanTambahBuku = scanner.nextLine().toLowerCase();
-                        tambahDataLagi = lanjutkanTambahBuku.equals("y") ? true : false;
+                        lanjutkan = scanner.nextLine().toLowerCase();
+                        tambahDataLagi = lanjutkan.equals("y") ? true : false;
                     }
                     break;
                 case 2:
@@ -60,9 +71,9 @@ public class Main {
                         System.out.print("Masukkan Nama atau ISBN Buku yang Akan Dihapus : ");
                         String namaAtauISBN = scanner.nextLine();
                         perpustakaanDB.hapusBuku(namaAtauISBN);
-                        System.out.print("Hapus Buku lagi ? (y/n) :");
-                        String hapusBukuLagi = scanner.nextLine().toLowerCase();
-                        hapusLagi = hapusBukuLagi.equals("y");
+                        System.out.print("Hapus Buku lagi ? (y/n) : ");
+                        lanjutkan = scanner.nextLine().toLowerCase();
+                        hapusLagi = lanjutkan.equals("y");
                     }
                     break;
                 case 3:
@@ -74,7 +85,7 @@ public class Main {
                     System.out.println(
                             "===============================================================================================");
                     System.out.println(
-                            "                                    DAFTAR SEMUA BUKU                                     ");
+                            "                                    DAFTAR SEMUA BUKU                                          ");
                     System.out.println(
                             "===============================================================================================");
                     System.out.println(
@@ -85,8 +96,8 @@ public class Main {
                     perpustakaanDB.tampilkanDaftarBuku();
                     System.out.println(
                             "-----------------------------------------------------------------------------------------------");
-                    System.out.print("Apakah Anda ingin melanjutkan ke menu utama? (y/n): ");
-                    String lanjutkan = scanner.nextLine().toLowerCase();
+                    System.out.print("Apakah Anda ingin melanjutkan ke menu utama? (y/n) : ");
+                    lanjutkan = scanner.nextLine().toLowerCase();
 
                     exit = !lanjutkan.equals("y") ? true : false;
                     break;
@@ -101,9 +112,9 @@ public class Main {
                         perpustakaanDB.cariBuku(judul_buku);
                         System.out.println(
                                 "-----------------------------------------------------------------------------------------------");
-                        System.out.print("Cari Buku lagi ? (y/n) :");
-                        String cariBukuLagi = scanner.nextLine().toLowerCase();
-                        cariLagi = cariBukuLagi.equals("y");
+                        System.out.print("Cari Buku lagi ? (y/n) : ");
+                        lanjutkan = scanner.nextLine().toLowerCase();
+                        cariLagi = lanjutkan.equals("y");
                     }
                     break;
                 case 6:
@@ -140,9 +151,9 @@ public class Main {
                             perpustakaanDB.peminjamanBuku(peminjamanBuku);
                         }
                         System.out.print("Apakah Anda ingin menambah pinjaman (y/n): ");
-                        String tambahPinjaman = scanner.nextLine().toLowerCase();
+                        lanjutkan = scanner.nextLine().toLowerCase();
 
-                        pinjamLagi = tambahPinjaman.equals("y") ? true : false;
+                        pinjamLagi = lanjutkan.equals("y") ? true : false;
                     }
                     break;
                 case 7:
@@ -167,12 +178,19 @@ public class Main {
                     break;
                 case 8:
                     // * Ubah Status Pinjaman
-                    System.out.print("Masukkan Nomor Pinjaman : ");
-                    int id_peminjaman = scanner.nextInt();
-                    System.out.print("Ubah Status Pinjaman    : ");
-                    String status_pinjaman = scanner.next();
-                    Peminjaman editPinjam = new Peminjaman(id_peminjaman, status_pinjaman);
-                    perpustakaanDB.editPeminjaman(editPinjam);
+                    boolean ubahLagi = true;
+                    while (ubahLagi) {
+                        System.out.print("Masukkan Nomor Pinjaman : ");
+                        int id_peminjaman = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.print("Ubah Status Pinjaman    : ");
+                        String status_pinjaman = scanner.next();
+                        Peminjaman editPinjam = new Peminjaman(id_peminjaman, status_pinjaman);
+                        perpustakaanDB.editPeminjaman(editPinjam);
+                        System.out.print("Ingin mengubah lagi ? (y/n) :");
+                        lanjutkan = scanner.next().toLowerCase();
+                        ubahLagi = lanjutkan.equals("y") ? true : false;
+                    }
                     break;
                 case 9:
                     // * CETAK STRUK
@@ -184,8 +202,8 @@ public class Main {
                         int idPeminjaman = scanner.nextInt();
                         perpustakaanDB.tampilkanPeminjaman(idPeminjaman);
                         System.out.print("Ingin mencetak lagi ? (y/n) :");
-                        String jawab = scanner.next();
-                        cetakLagi = jawab.equals("y") ? true : false;
+                        lanjutkan = scanner.next();
+                        cetakLagi = lanjutkan.equals("y") ? true : false;
                     }
 
                     break;

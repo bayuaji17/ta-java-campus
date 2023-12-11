@@ -1,3 +1,4 @@
+//TODO REVIEW CLASS BUKU (1)
 public class Buku {
     private int isbn;
     private String judul_buku;
