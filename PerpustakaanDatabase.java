@@ -243,7 +243,6 @@ public class PerpustakaanDatabase {
                 String tanggal_pengembalian = resultSet.getString("tanggal_pengembalian");
                 String status_peminjaman = resultSet.getString("status_peminjaman");
 
-                // Create a Peminjaman object using the constructor with all parameters
                 Peminjaman peminjaman = new Peminjaman(
                         id_peminjaman, id_anggota, nama_anggota, alamat_peminjam, isbn, judul_buku,
                         tanggal_peminjaman, tanggal_pengembalian, status_peminjaman);
