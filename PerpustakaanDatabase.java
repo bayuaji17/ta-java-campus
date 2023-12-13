@@ -229,9 +229,9 @@ public class PerpustakaanDatabase {
     // TODO REVIEW TAMPILKAN SEMUA DAFTAR PEMINJAMAN(5)
     // * METHOD UNTUK MENAMPILKAN SEMUA PEMINJAM
     public void tampilkanSemuaPeminjam() {
-        String sql = "SELECT * FROM peminjaman";
-        try (PreparedStatement selecStatement = connection.prepareStatement(sql);
-                ResultSet resultSet = selecStatement.executeQuery()) {
+        String sql = "SELECT * FROM peminjaman ";
+        try (PreparedStatement selectStatement = connection.prepareStatement(sql);
+                ResultSet resultSet = selectStatement.executeQuery()) {
             while (resultSet.next()) {
                 int id_peminjaman = resultSet.getInt("id_peminjaman");
                 int id_anggota = resultSet.getInt("id_anggota");
@@ -243,22 +243,25 @@ public class PerpustakaanDatabase {
                 String tanggal_pengembalian = resultSet.getString("tanggal_pengembalian");
                 String status_peminjaman = resultSet.getString("status_peminjaman");
 
-                System.out.printf("| %-13d ", id_peminjaman);
-                System.out.printf("| %-10d ", id_anggota);
-                System.out.printf("| %-14s ", nama_anggota);
-                System.out.printf("| %4d ", isbn);
-                System.out.printf("| %-29s ", judul_buku);
-                System.out.printf("| %-14s ", tanggal_peminjaman);
-                System.out.printf("| %-16s ", tanggal_pengembalian);
-                System.out.printf("| %-13s ", status_peminjaman);
-                System.out.printf("| %4s ", alamat_peminjam);
+                // Create a Peminjaman object using the constructor with all parameters
+                Peminjaman peminjaman = new Peminjaman(
+                        id_peminjaman, id_anggota, nama_anggota, alamat_peminjam, isbn, judul_buku,
+                        tanggal_peminjaman, tanggal_pengembalian, status_peminjaman);
+
+                System.out.printf("| %-13d ", peminjaman.getIdPeminjaman());
+                System.out.printf("| %-10d ", peminjaman.getId_anggota());
+                System.out.printf("| %-14s ", peminjaman.getNama_anggota());
+                System.out.printf("| %4d ", peminjaman.getIsbn());
+                System.out.printf("| %-29s ", peminjaman.getJudul_buku());
+                System.out.printf("| %-14s ", peminjaman.getTanggal_peminjaman());
+                System.out.printf("| %-16s ", peminjaman.getTanggal_pengembalian());
+                System.out.printf("| %-13s ", peminjaman.getStatus_peminjaman());
+                System.out.printf("| %4s ", peminjaman.getAlamat_peminjam());
                 System.out.println("");
-
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Gagl menampilkan daftar peminjam");
+            System.out.println("Gagal menampilkan daftar peminjam");
         }
     }
 

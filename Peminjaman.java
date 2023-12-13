@@ -27,9 +27,19 @@ public class Peminjaman {
         this.status_peminjaman = status_peminjaman;
     }
 
-    public Peminjaman(int id_peminjaman) {
+    public Peminjaman(int id_peminjaman, int id_anggota, String nama_anggota, String alamat_peminjam, int isbn_buku,
+            String judulBuku, String tanggal_peminjaman, String tanggal_pengembalian, String status_peminjaman) {
         this.id_peminjaman = id_peminjaman;
+        this.id_anggota = id_anggota;
+        this.nama_anggota = nama_anggota;
+        this.alamat_peminjam = alamat_peminjam;
+        this.isbn_buku = isbn_buku;
+        this.judulBuku = judulBuku;
+        this.tanggal_peminjaman = tanggal_peminjaman;
+        this.tanggal_pengembalian = tanggal_pengembalian;
+        this.status_peminjaman = status_peminjaman;
     }
+
     public int getIdPeminjaman() {
         return id_peminjaman;
     }
