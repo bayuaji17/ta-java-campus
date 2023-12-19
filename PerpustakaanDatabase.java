@@ -6,9 +6,9 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class PerpustakaanDatabase {
-    // TODO REVIEW KONEKSI(2)
     private Connection connection;
 
+    // *Koneksi Database
     public PerpustakaanDatabase(String dbName) {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbName);
@@ -17,7 +17,6 @@ public class PerpustakaanDatabase {
         }
     }
 
-    // TODO REVIEW TAMBAH BUKU (2)
     // * METHOD UNTUK TAMBAH BUKU */
     public void tambahBuku(Buku buku) {
         String sql = "INSERT INTO data_buku (isbn, judul_buku, pengarang, tahun_terbit) VALUES (?, ?, ?, ?)";
@@ -36,7 +35,6 @@ public class PerpustakaanDatabase {
         }
     }
 
-    // TODO REVIEW HAPUS BUKU (3)
     // * METHOD UNTUK HAPUS BUKU */
     public void hapusBuku(String namaAtauISBN) {
         String sql = "DELETE FROM data_buku WHERE judul_buku = ? OR isbn = ?";
@@ -66,7 +64,6 @@ public class PerpustakaanDatabase {
         }
     }
 
-    // TODO REVIEW EDIT BUKU(3)
     // * METHOD UNTUK EDIT BUKU */
     public void editBuku() {
         Scanner scanner = new Scanner(System.in);
@@ -125,7 +122,6 @@ public class PerpustakaanDatabase {
 
     }
 
-    // TODO REVIEW TAMPILKAN BUKU(4)
     // * METHOD UNTUK MENAMPILKAN DAFTAR BUKU
     public void tampilkanDaftarBuku() {
         String sql = "SELECT * FROM data_buku";
@@ -153,7 +149,6 @@ public class PerpustakaanDatabase {
         }
     }
 
-    // TODO REVIEW CARI BUKU(4)
     // * METHOD UNTUK CARI BUKU */
     public void cariBuku(String judul_buku) {
         String sql = "SELECT * FROM data_buku WHERE judul_buku LIKE ?";
@@ -191,16 +186,15 @@ public class PerpustakaanDatabase {
         }
     }
 
-    // TODO REVIEW TAMBAH PEMINJAMAN(4)
-    // * METHOD UNTUK PEMINJAMAN BUKU
+    // * METHOD UNTUK MENAMBAHKAN PEMINJAMAN BUKU
     public void peminjamanBuku(Peminjaman peminjaman) {
 
         String sql = "INSERT INTO peminjaman (id_anggota, nama_anggota, isbn, judul_buku, alamat_peminjam, tanggal_peminjaman, tanggal_pengembalian, status_peminjaman) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, peminjaman.getId_anggota());
             statement.setString(2, peminjaman.getNama_anggota());
-            statement.setInt(3, peminjaman.getIsbn());
-            statement.setString(4, peminjaman.getJudul_buku());
+            statement.setInt(3, peminjaman.getISBN());
+            statement.setString(4, peminjaman.getJudul());
             statement.setString(5, peminjaman.getAlamat_peminjam());
             statement.setString(6, peminjaman.getTanggal_peminjaman());
             statement.setString(7, peminjaman.getTanggal_pengembalian());
@@ -226,7 +220,6 @@ public class PerpustakaanDatabase {
 
     }
 
-    // TODO REVIEW TAMPILKAN SEMUA DAFTAR PEMINJAMAN(5)
     // * METHOD UNTUK MENAMPILKAN SEMUA PEMINJAM
     public void tampilkanSemuaPeminjam() {
         String sql = "SELECT * FROM peminjaman ";
@@ -250,8 +243,8 @@ public class PerpustakaanDatabase {
                 System.out.printf("| %-13d ", peminjaman.getIdPeminjaman());
                 System.out.printf("| %-10d ", peminjaman.getId_anggota());
                 System.out.printf("| %-14s ", peminjaman.getNama_anggota());
-                System.out.printf("| %4d ", peminjaman.getIsbn());
-                System.out.printf("| %-29s ", peminjaman.getJudul_buku());
+                System.out.printf("| %4d ", peminjaman.getISBN());
+                System.out.printf("| %-29s ", peminjaman.getJudul());
                 System.out.printf("| %-14s ", peminjaman.getTanggal_peminjaman());
                 System.out.printf("| %-16s ", peminjaman.getTanggal_pengembalian());
                 System.out.printf("| %-13s ", peminjaman.getStatus_peminjaman());
@@ -264,7 +257,6 @@ public class PerpustakaanDatabase {
         }
     }
 
-    // TODO REVIEW UBAH STATUS PEMINJAMAN (5)
     // * METHOD UNTUK UBAH STATUS PEMINJAMAN
     public void editPeminjaman(Peminjaman peminjaman) {
         String sqlEdit = "UPDATE peminjaman SET status_peminjaman = ? WHERE id_peminjaman = ?";
@@ -284,7 +276,6 @@ public class PerpustakaanDatabase {
         }
     }
 
-    // TODO REVIEW CETAK STRUK (5)
     // * METHOD TAMPILKAN STRUK
     public void tampilkanPeminjaman(int id_peminjaman) {
         String selectSql = "SELECT id_peminjaman, id_anggota, nama_anggota, isbn, judul_buku, alamat_peminjam, tanggal_peminjaman, tanggal_pengembalian, status_peminjaman FROM peminjaman WHERE id_peminjaman = ?";
@@ -321,7 +312,6 @@ public class PerpustakaanDatabase {
         }
     }
 
-    // TODO REVIEW KONEKSI (2)
     public void closeConnection() {
         try {
             if (connection != null) {

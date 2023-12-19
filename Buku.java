@@ -1,9 +1,13 @@
-//TODO REVIEW CLASS BUKU (1)
 public class Buku {
-    private int isbn;
-    private String judul_buku;
+    public int isbn;
+    public String judul_buku;
     private String pengarang;
     private int tahun_terbit;
+
+    public Buku(int isbn, String judul_buku) {
+        this.isbn = isbn;
+        this.judul_buku = judul_buku;
+    }
 
     public Buku(int isbn, String judul_buku, String pengarang, int tahun_terbit) {
         this.isbn = isbn;

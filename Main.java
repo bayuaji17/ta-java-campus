@@ -1,16 +1,13 @@
 import java.util.Scanner;
-//TODO REVIEW CODINGAN
-//TODO - Review Class Buku.java dan Class Peminjaman.java  (1)
-//TODO - Review database dan 2 table, method koneksi database, Method tambah (2)
-//TODO - Review Method hapus buku, edit buku (3)
-//TODO - Review Method tampilkan daftar buku, cari buku,tambah peminjaman (4)
-//TODO - Review Method tampilkan daftar peminjaman,ubah status peminjaman,cetak Struk (5)
-//TODO - Review Class Main.java dan OUTPUT PROGRAM ! (6)
 
-// * Driver menggunakan versi sqlite-jdbc-3.42.0.0.jar
-// * Database menggunakan sqlite3
-
-//TODO REVIEW (6)
+/*
+Tested success on
+Driver        :sqlite-jdbc-3.42.0.0.jar
+Database      :sqlite3 
+Nama Database : perpustakaan.db
+Nama Table    : 1. data_buku
+                2. peminjaman
+*/
 public class Main {
     public static void main(String[] args) {
         PerpustakaanDatabase perpustakaanDB = new PerpustakaanDatabase("perpustakaan.db");
